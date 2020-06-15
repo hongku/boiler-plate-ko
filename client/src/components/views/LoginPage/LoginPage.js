@@ -1,5 +1,6 @@
 import * as React from 'react';
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../../../store/actions/userAction';
 
 const LoginPageWrapperStyle = {
   display: 'flex',
@@ -14,29 +15,25 @@ const FormStyle = {
 }
 
 export default function LoginPage() {
+  const dispatch = useDispatch();
+  
   const [value, setValue] = React.useState({
     email: '',
     password: ''
   });
 
   const handleInputChange = (key) => (event) => {
-    const value = event.target.value;
-    setValue({ ...value, [key]: value });
+    const inputValue = event.target.value;
+    setValue({ ...value, [key]: inputValue });
   };
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     const requestBody = {
       email: value.email,
       password: value.password
     }
 
-    const response = await axios.post('/api/users/login', requestBody);
-
-    if (response.status === 200) {
-      console.log('Login Success');
-    } else {
-      console.log(response);
-    }
+    dispatch(loginUser(requestBody));
   };
   
   return (
